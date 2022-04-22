@@ -1,0 +1,2 @@
+vehicle_type,vehicleperstation,starttime,endtime,range,capacity,cruisespeed,verticalspeed,boardingtime,deboardingtime,turnaroundtime
+Default,10,0:00:00,24:00:00,999999,2,42,10,5,5,30
