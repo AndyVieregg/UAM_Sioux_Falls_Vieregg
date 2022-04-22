@@ -3,15 +3,15 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.matsim</groupId>
-	<artifactId>matsim-example-project</artifactId>
+	<artifactId>uam-sioux-falls-vieregg</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>MATSim example project</name>
-	<description>MATSim example project</description>
+	<name>UAM Sioux Falls Vieregg</name>
+	<description>For master's thesis 2022</description>
 
 	<properties>
 		<!-- release -->
-		<matsim.version>13.0</matsim.version>
+		<matsim.version>12.0</matsim.version>
 
 		<!-- weekly release -->
 <!--		<matsim.version>14.0-2021w43</matsim.version>-->
@@ -52,6 +52,10 @@
 			<id>slimjars</id>
 			<url>https://mvn.slimjars.com</url>
 		</repository>
+		<repository>
+            <id>eth-ivt-uam</id>
+            <url>https://packagecloud.io/eth-ivt/uam/maven2</url>
+        </repository>
 	</repositories>
 
 	<dependencies>
@@ -110,7 +114,7 @@
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>roadpricing</artifactId>
-			<version>${matsim.version}</version>
+			<version>13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
@@ -125,7 +129,7 @@
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>freight</artifactId>
-			<version>${matsim.version}</version>
+			<version>13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
@@ -138,6 +142,11 @@
 			<version>${matsim.version}</version>
 		</dependency>
 		<!--Dependencies from where stated above to here are added as a service; they can be removed if you don't need them-->
+		<dependency>
+            <groupId>net.bhl.matsim</groupId>
+            <artifactId>matsim-uam</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
 	</dependencies>
 
