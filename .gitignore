@@ -17,6 +17,8 @@ hs_err_pid*
 /output/
 /bin/
 **/output/
+/Outputs/
+/.ipynb_checkpoints/
 
 /.idea/
 *.iml
