@@ -42,7 +42,7 @@ final class RandomizingTimeDistanceTravelDisutility implements TravelDisutility 
 	private final double marginalCostOfDistance;
 	
 	private final double normalization ;
-	private final double sigma ;
+	private double sigma ;
 
 	private final Random random;
 
@@ -66,10 +66,14 @@ final class RandomizingTimeDistanceTravelDisutility implements TravelDisutility 
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public double getLinkTravelDisutility(final Link link, final double time, final Person person, final Vehicle vehicle) {
-		log.info("VIEREGG: Getting link travel disutility for link" + link.getFromNode().getId() + " - " + link.getToNode().getId()
-				+ ", time " + time + ", person " + person + ", vehicle " + vehicle);
+	public double getLinkTravelDisutility(final Link link, final double time, final Person person, final Vehicle vehicle) {		
+		if ( person==null ) {
+			sigma = 0;
+			}
+		
 		// randomize if applicable:
+		
+		
 		
 		if ( sigma != 0. ) {
 			if ( person==null ) {

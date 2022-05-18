@@ -22,7 +22,7 @@
 		<!-- Defines the mode switch behavior. Possible values [fromAllModesToSpecifiedModes, fromSpecifiedModesToSpecifiedModes] Default: fromSpecifiedModesToSpecifiedModes. -->
 		<param name="modeSwitchBehavior" value="fromSpecifiedModesToSpecifiedModes" />
 		<!-- Defines all the modes available, including chain-based modes, seperated by commas -->
-		<param name="modes" value="car,pt,uam" />
+		<param name="modes" value="uam,uam" />
 	</module>
 	<module name="controler" >
 		<!-- Compression algorithm to use when writing out data to files. Possible values: [none, gzip, lz4, zst] -->
