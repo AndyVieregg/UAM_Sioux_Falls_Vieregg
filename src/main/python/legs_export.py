@@ -10,13 +10,18 @@ crs = {'init': "EPSG:26914"}
 plans = matsim.plan_reader('scenarios/sioux_falls_uam/output/output_plans.xml.gz', selectedPlansOnly=True)
 
 persons_list = []
+trips_list = []
 
-logging.info('Getting home, work and secondary locations from plans.xml')
+logging.info('Getting leg info from plans.xml')
 
 for person, plan in plans:
-    # get person id
-    person_id = person.attrib['id']
-    person_dict = {'person_id': person_id}
+
+    # Summarise legs into trips, assumption there is a home activity at the start and end of the day
+
+    legs = filter(lambda e: e.tag == 'leg', plan)
+    for leg in legs:
+        # id of the person travelling
+        leg_dict = {'person_id': person.attrib['id']}
 
     # get home locations
     # get x and y coordinates from first home activity
