@@ -23,3 +23,10 @@ hs_err_pid*
 /.idea/
 *.iml
 .Rproj.user
+
+/UAM_Sioux_Falls_Vieregg.Rproj
+/original-input-data/sioux_falls/population.xml
+/scenarios/sioux_falls/population.xml
+/scenarios/sioux_falls_uam/Siouxfalls_facilities.xml
+/scenarios/sioux_falls_uam/population.xml
+/scenarios/sioux_falls_uam/uam_network.xml
