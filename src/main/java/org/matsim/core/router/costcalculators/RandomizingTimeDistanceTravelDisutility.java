@@ -28,6 +28,7 @@ import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.vehicles.Vehicle;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -67,6 +68,7 @@ final class RandomizingTimeDistanceTravelDisutility implements TravelDisutility 
 	@SuppressWarnings("deprecation")
 	@Override
 	public double getLinkTravelDisutility(final Link link, final double time, final Person person, final Vehicle vehicle) {		
+				
 		if ( person==null ) {
 			sigma = 0;
 			}
