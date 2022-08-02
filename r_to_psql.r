@@ -6,6 +6,6 @@ con <- dbConnect(RPostgres::Postgres(),
                  port = 5433,
                  user = 'postgres',
                  password = 'hainich',
-                 options="-c search_path=uam_bl")
+                 options="-c search_path=uam_sp_test")
 
-dbWriteTable (con, 'linkstats', linkstatsu, overwrite=TRUE)
+dbWriteTable (con, 'linkstats', ls_sp_test, overwrite=TRUE)

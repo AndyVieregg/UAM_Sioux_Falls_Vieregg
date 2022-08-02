@@ -1,9 +1,14 @@
 package scenarioPreparation;
 
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -23,75 +28,57 @@ import org.matsim.core.population.io.PopulationReader;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.geometry.CoordUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+
 public class AddSubpopulation {
+	
+	public static List<Map<String, String>> read(File file) throws JsonProcessingException, IOException {
+	    List<Map<String, String>> response = new LinkedList<Map<String, String>>();
+	    CsvMapper mapper = new CsvMapper();
+	    CsvSchema schema = CsvSchema.emptySchema().withHeader();
+	    MappingIterator<Map<String,String>> it = mapper.readerFor(Map.class)
+	    		   .with(schema)
+	    		   .readValues(file);
+	    while (it.hasNext()) {
+	        response.add(it.next());
+	    }
+	    return response;
+	}
+	
 public static void main(String[] args) {
 		
 		String configPath = "scenarios/sioux_falls_uam/uam_config.xml";
-		
-		String outputNetworkPath = "scenarios/sioux_falls_uam/uam_network_sptest";
+		String subpopsCsvPath = "scenarios/sioux_falls_uam/subpops_random_test.csv";
+		String outputPopPath = "scenarios/sioux_falls_uam/population_sptest.xml.gz";
 		
 		// load config and plans
 		Config config = ConfigUtils.loadConfig(configPath);
 		Scenario scenario = ScenarioUtils.loadScenario(config);
-		
-	
-		// initialise empty population
 		Population population = scenario.getPopulation();
+		Network network = scenario.getNetwork();
 		
-		// get centroid nodes' x and y location from csv
-		Coord[] node_coords = new Coord[25];
+		// Read subpopulations from csv
 		
-		Reader in;
-		Iterable<CSVRecord> records;
+		File csvFile = new File(subpopsCsvPath);
+		List<Map<String, String>> subpopsList = null;
 		try {
-			in = new FileReader("src/main/resources/centroid_nodes.csv");
-			records = CSVFormat.TDF.withHeader("zone_id","x","y","node_id").parse(in);
-			
-			int i = 1;
-			for (CSVRecord record : records) {
-				String node_x = record.get("x");
-				String node_y = record.get("y");
-				node_coords[i] = CoordUtils.createCoord(Double.parseDouble(node_x),Double.parseDouble(node_y));
-				i++;		
-			}
-		} catch (FileNotFoundException e) {
+			subpopsList = read(csvFile);
+		}
+		catch(IOException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			System.exit(-1);
 		}
 		
-		// populate
-		for(int o = 1; o <= 24; o++) {
-			for(int d = 1; d <= 24; d++) {
-				// get o and d coordinates
-				
-				// create plan
-				Plan plan = PopulationUtils.createPlan();
-				
-				Activity home1 = PopulationUtils.createActivityFromCoord("home",node_coords[o]);
-				home1.setEndTime(32400); // 09:00:00
-				plan.addActivity(home1);
-				
-				PopulationUtils.createAndAddLeg(plan, "uam");
-				
-				Activity work1 = PopulationUtils.createActivityFromCoord("work",node_coords[d]);
-				work1.setEndTime(61200); // 17:00:00
-				plan.addActivity(work1);
-				
-				PopulationUtils.createAndAddLeg(plan, "uam");
-				
-				PopulationUtils.createAndAddActivityFromCoord(plan, "home", node_coords[o]);
-				
-				// add new person with the plan (and id o-d) to the population
-				String idString = Integer.toString(o) + "-" + Integer.toString(d);
-				Id<Person> id = Id.createPersonId(idString);
-				Person person = PopulationUtils.getFactory().createPerson(id);
-				person.addPlan(plan);
-				population.addPerson(person);
-			}
+		Map<Id<Person>, ? extends Person> personsList = population.getPersons();
+		for(Map<String, String> subpopMap : subpopsList) {
+			Id<Person> personId = Id.createPersonId(subpopMap.get("person_id"));
+			PopulationUtils.putSubpopulation(personsList.get(personId), subpopMap.get("subpop"));
 		}
 		
-		// write output population
-		new PopulationWriter(population,network).write(outputNetworkPath);
+
+		new PopulationWriter(population,network).write(outputPopPath);
 	}
 }

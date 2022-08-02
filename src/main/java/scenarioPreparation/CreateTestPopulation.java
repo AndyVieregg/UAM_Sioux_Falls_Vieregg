@@ -85,7 +85,9 @@ public class CreateTestPopulation {
 				Id<Person> id = Id.createPersonId(idString);
 				Person person = PopulationUtils.getFactory().createPerson(id);
 				person.addPlan(plan);
+				PopulationUtils.putSubpopulation(person, "default");
 				population.addPerson(person);
+				
 			}
 		}
 		
