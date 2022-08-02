@@ -3,21 +3,20 @@
 
 # Discrete Choice Model Estimation with Biogeme
 
-### Includes
-
 import os
+import logging
 import pandas as pd
-#import numpy as np
 import biogeme.database as db
 import biogeme.biogeme as bio
 import biogeme.models as models
 from biogeme.expressions import Beta
 from pathlib import Path
+from datetime import datetime
 
 
-def estimate_mnl():
-    data_path = "Biogeme/non_uam_bl_0719/"  # MATSim scenario
-    scenario_name = "test_mnl_0726"  # Estimation scenario
+def estimate_mnl(ms_scenario="default"):
+    data_path = "Biogeme/" + ms_scenario    # MATSim scenario
+    scenario_name = "mnl_validation_0802"   # Estimation scenario
 
     # Switch to data directory
     Path(data_path).mkdir(parents=True, exist_ok=True)
@@ -25,7 +24,9 @@ def estimate_mnl():
     os.chdir(data_path)
 
     # Read Data
-    print(os.getcwd())
+
+    logging.info("Reading data")
+
     df = pd.read_csv("sioux_falls.dat")
     database = db.Database('sioux_falls', df)
 
@@ -62,6 +63,14 @@ def estimate_mnl():
     # (availability)
     av = None
 
+    # Switch to output dir
+    time_str = datetime.now().strftime("%m%d-%H%M")
+    output_dir_str = scenario_name + "/out-" + time_str
+    Path(output_dir_str).mkdir(parents=True, exist_ok=True)
+    os.chdir(output_dir_str)
+
+    logging.info("Estimating Biogeme model")
+
     # Model definition: Contribution of each parameter to the log likelihood+
     logprob = models.loglogit(V, av, CHOICE)
 
@@ -73,7 +82,22 @@ def estimate_mnl():
     # Estimate parameters
     results = biogeme.estimate()
 
+    logging.info("Done")
+
+    # Validation
+
+    logging.info("Validation")
+
+    no_slices = 10
+    validation_data = database.split(slices=no_slices)
+
+    validation_results = biogeme.validate(results, validation_data)
+
+    ll_list = []
+    for slide in validation_results:
+        ll_list.append(slide["Loglikelihood"].sum())
+
     # Change back to original working directory
     os.chdir(original_wd)
 
-    return results
+    return results, ll_list, scenario_name
