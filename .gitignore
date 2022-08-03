@@ -31,3 +31,9 @@ hs_err_pid*
 /scenarios/sioux_falls_uam/Siouxfalls_facilities.xml
 /scenarios/sioux_falls_uam/population.xml
 /scenarios/sioux_falls_uam/uam_network.xml
+/.RData
+/.Rhistory
+/__test_mnl_0726.iter
+/biogeme.ipynb
+/demand scenarios.xlsx
+/Estimation History.xlsx

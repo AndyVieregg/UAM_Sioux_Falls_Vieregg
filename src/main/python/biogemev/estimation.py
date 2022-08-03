@@ -14,7 +14,7 @@ from pathlib import Path
 from datetime import datetime
 
 
-def estimate_mnl(ms_scenario="default"):
+def estimate_mnl(ms_scenario="default", no_validation_slices=10, is_uam=False):
     data_path = "Biogeme/" + ms_scenario    # MATSim scenario
     scenario_name = "mnl_validation_0802"   # Estimation scenario
 
@@ -60,8 +60,19 @@ def estimate_mnl(ms_scenario="default"):
     # Association between utility functions and numbering of alternatives
     V = {1: V1, 2: V2, 3: V3}
 
+    # UAM-only parameters and variables
+    if is_uam:
+        ASC_UAM = Beta('ASC_UAM', 0, None, None, 0)
+        TIME_UAM = time_uam
+        COST_UAM = cost_uam
+
+        V4 = ASC_UAM + B_TIME * TIME_UAM + B_COST * COST_UAM
+
+        V.update({4: V4})
+
     # (availability)
     av = None
+
 
     # Switch to output dir
     time_str = datetime.now().strftime("%m%d-%H%M")
@@ -86,10 +97,13 @@ def estimate_mnl(ms_scenario="default"):
 
     # Validation
 
+    # skip if 0 slices desired
+    if no_validation_slices == 0:
+        return results, None, scenario_name, time_str
+
     logging.info("Validation")
 
-    no_slices = 10
-    validation_data = database.split(slices=no_slices)
+    validation_data = database.split(slices=no_validation_slices)
 
     validation_results = biogeme.validate(results, validation_data)
 
@@ -100,4 +114,4 @@ def estimate_mnl(ms_scenario="default"):
     # Change back to original working directory
     os.chdir(original_wd)
 
-    return results, ll_list, scenario_name
+    return results, ll_list, scenario_name, time_str
