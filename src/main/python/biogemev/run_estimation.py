@@ -1,6 +1,6 @@
 import logging
 
-import dao
+from Dao import Dao
 import estimation
 import processing
 
@@ -16,19 +16,30 @@ def biogeme_psql_out(ms_scenario, no_validation_slices, is_uam):
     results_dict = processing.results_as_dict(results, ll_list, ms_scenario, est_time)
 
     # PSQL output
+    dao = Dao()
+
     dao.create_results_table(est_scenario_name)
     dao.results_to_psql(results_dict, est_scenario_name)
 
+    return est_scenario_name
 
-def tt_comparison(ms_scenario):
-    dao.compare_trav_times(ms_scenario)
+
+def od_comparison(ms_scenario, est_scenario):
+    dao = Dao()
+    dao.compare_od(ms_scenario, est_scenario)
 
 
 if __name__ == '__main__':
-    ms_scenario = "uam_sp_test_0801"
-    is_uam = True
-    no_validation_slices = 10
+    matsim_scenario = "uam_sp_ap_0806"
+    isuam = True
+    validation_slices = 10
 
-    biogeme_psql_out(ms_scenario, is_uam, no_validation_slices)
+    est_scen_name = biogeme_psql_out(matsim_scenario, validation_slices, isuam)
+    #od_comparison(matsim_scenario, est_scen_name)
+    #dao = Dao()
+    #od_df = dao.get_od_df(matsim_scenario)
+
+    # use OD data and estimated param values to get expected zonal OD entries per mode
+
 
     logging.info("Done")

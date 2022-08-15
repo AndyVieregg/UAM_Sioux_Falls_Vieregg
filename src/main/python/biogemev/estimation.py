@@ -16,7 +16,7 @@ from datetime import datetime
 
 def estimate_mnl(ms_scenario="default", no_validation_slices=10, is_uam=False):
     data_path = "Biogeme/" + ms_scenario    # MATSim scenario
-    scenario_name = "mnl_validation_0802"   # Estimation scenario
+    scenario_name = "mnl_validation_0812"   # Estimation scenario
 
     # Switch to data directory
     Path(data_path).mkdir(parents=True, exist_ok=True)
@@ -27,7 +27,7 @@ def estimate_mnl(ms_scenario="default", no_validation_slices=10, is_uam=False):
 
     logging.info("Reading data")
 
-    df = pd.read_csv("sioux_falls.dat")
+    df = pd.read_csv("sioux_falls_0812.dat")
     database = db.Database('sioux_falls', df)
 
     # import variable names to Python variables
@@ -59,6 +59,7 @@ def estimate_mnl(ms_scenario="default", no_validation_slices=10, is_uam=False):
 
     # Association between utility functions and numbering of alternatives
     V = {1: V1, 2: V2, 3: V3}
+
 
     # UAM-only parameters and variables
     if is_uam:

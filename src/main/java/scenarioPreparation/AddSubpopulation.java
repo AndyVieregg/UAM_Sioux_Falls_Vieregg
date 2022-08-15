@@ -51,8 +51,8 @@ public class AddSubpopulation {
 public static void main(String[] args) {
 		
 		String configPath = "scenarios/sioux_falls_uam/uam_config.xml";
-		String subpopsCsvPath = "scenarios/sioux_falls_uam/subpops_random_test.csv";
-		String outputPopPath = "scenarios/sioux_falls_uam/population_sptest.xml.gz";
+		String subpopsCsvPath = "scenarios/sioux_falls_uam/subpopulations/subpops_airport_zones.csv";
+		String outputPopPath = "scenarios/sioux_falls_uam/population_spap.xml.gz";
 		
 		// load config and plans
 		Config config = ConfigUtils.loadConfig(configPath);
